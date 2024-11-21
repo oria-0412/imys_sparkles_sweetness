@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #E6E6FA;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button {
+            background-color: #800080;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5a005a;
+        }
+        .other-input {
+            display: none;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Order Form</h2>
+        <form id="orderForm" action="order.php" method="POST" onsubmit="return validateForm()">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+        
+            <label for="sweets">Select Sweets:</label>
+            <select id="sweets" name="sweets" required>
+                <option value="">--Choose an option--</option>
+                <option value="Baklava">Baklava</option>
+                <option value="Makroud">Makroud</option>
+                <option value="Mkhabez">Mkhabez</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <div id="other-checkbox-input" class="other-input">
+                <label for="other-sweet">Other sweet:</label>
+                <input type="text" id="other-sweet" name="other-sweet">
+            </div>
+        
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" required>
+        
+            <button type="submit">Submit Order</button>
+            <p id="error-message" class="error-message"></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('sweets').addEventListener('change', function() {
+            var otherSweetInput = document.getElementById('other-checkbox-input');
+            if (this.value === 'Other') {
+                otherSweetInput.style.display = 'block';
+            } else {
+                otherSweetInput.style.display = 'none';
+            }
+        });
+
+        function validateForm() {
+            var errorMessage = "";
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+            var sweets = document.getElementById("sweets").value;
+            var quantity = document.getElementById("quantity").value;
+
+            if (!name || !email || !phone || !sweets || !quantity) {
+                errorMessage = "Failed: Please complete all fields correctly.";
+            } else if (!/\S+@\S+\.\S+/.test(email)) {
+                errorMessage = "Failed: Invalid email format.";
+            } else if (!/^\d{10}$/.test(phone)) {
+                errorMessage = "Failed: Invalid phone number.";
+            } else if (sweets === "Other" && !document.getElementById("other-sweet").value) {
+                errorMessage = "Failed: Please specify the other sweet.";
+            }
+
+            if (errorMessage) {
+                document.getElementById("error-message").innerText = errorMessage;
+                return false; // Prevent form submission
+            }
+           // If all fields are valid, redirect
+            window.location.href = 'thank-you-order.html';// Redirects to the Thank You page
+            return false; // Prevent form submission because of manual redirection
+        }
+    </script>
+</body>
+</html>

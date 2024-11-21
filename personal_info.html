@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #E6E6FA;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button {
+            background-color: #800080;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Personal Information</h2>
+        <form id="infoForm" onsubmit="return validateForm()">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <p>What do you want to learn?</p>
+            <label><input type="radio" name="course-option" value="Traditional Sweets" required> Traditional Sweets</label><br>
+            <label><input type="radio" name="course-option" value="Modern Sweets" required> Modern Sweets</label><br>
+            <label><input type="radio" name="course-option" value="Savory" required> Savory</label>
+
+            <button type="submit">Submit</button>
+            <p id="error-message" class="error-message"></p>
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            let errorMessage = "";
+            let email = document.getElementById("email").value;
+            let name = document.getElementById("name").value;
+            let phone = document.getElementById("phone").value;
+            let courseOption = document.querySelector('input[name="course-option"]:checked');
+
+            // Check if all fields are filled
+            if (!email || !name || !phone || !courseOption) {
+                errorMessage = "Failed: Please complete all fields correctly.";
+            } else if (!/\S+@\S+\.\S+/.test(email)) {
+                errorMessage = "Failed: Invalid email format.";
+            } else if (!/^\d{10}$/.test(phone)) {
+                errorMessage = "Failed: Invalid phone number.";
+            }
+
+            // Display error message if validation fails
+            if (errorMessage) {
+                document.getElementById("error-message").innerText = errorMessage;
+                return false; // Prevent form submission
+            }
+            
+            // If all fields are valid, redirect
+            window.location.href = 'thank-you.html';  // Redirects to the Thank You page
+            return false; // Prevent form submission because of manual redirection
+        }
+    </script>
+</body>
+</html>
