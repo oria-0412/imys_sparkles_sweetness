@@ -20,7 +20,7 @@ $phone_number = trim($_POST['phone']);
 $course_option = trim($_POST['course-option']);
 
 // Basic input validation
-if (empty($name) || empty($email) || empty($phone) || empty($course_option)) {
+if (empty($name) || empty($email) || empty($phone_number) || empty($course_option)) {
     die("Error: All fields are required.");
 }
 
@@ -28,30 +28,27 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     die("Error: Invalid email format.");
 }
 
-if (!preg_match("/^\d{10}$/", $phone)) {
+if (!preg_match("/^\d{10}$/", $phone_number)) {
     die("Error: Invalid phone number. Must be 10 digits.");
 }
 
-// Escape strings for security
-$name = $conn->real_escape_string($name);
-$email = $conn->real_escape_string($email);
-$phone_number = $conn->real_escape_string($phone);
-$course_option = $conn->real_escape_string($course_option);
-
-// Insert or update data in the PersonalInfo table
-$sql = "INSERT INTO PersonalInfo (name, email, phone_number, course_option) 
-        VALUES ('$name', '$email', '$phone_number', '$course_option') 
+// Prepare and bind
+$stmt = $conn->prepare("INSERT INTO PersonalInfo (name, email, phone_number, course_option) 
+        VALUES (?, ?, ?, ?) 
         ON DUPLICATE KEY UPDATE 
-        course_option = '$course_option';
+        course_option = ?");
+$stmt->bind_param("sssss", $name, $email, $phone_number, $course_option, $course_option);
 
-if ($conn->query($sql) === TRUE) {
+// Execute the statement
+if ($stmt->execute()) {
     // Redirect to the Thank You page
     header("Location: thank-you.html");
     exit();
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    echo "Error: " . $stmt->error;
 }
 
-// Close the connection
+// Close the statement and connection
+$stmt->close();
 $conn->close();
 ?>
