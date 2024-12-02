@@ -22,6 +22,7 @@ if (!$result) {
     die("Error executing query: " . $conn->error);
 }
 
+// Display the data in a table
 if ($result->num_rows > 0) {
     echo "<table border='1' cellpadding='10' cellspacing='0'>";
     echo "<tr>
@@ -33,6 +34,7 @@ if ($result->num_rows > 0) {
             <th>Quantity</th>
           </tr>";
 
+    // Fetch associative array and display each row
     while ($row = $result->fetch_assoc()) {
         // Escape output to prevent XSS
         $name = htmlspecialchars($row['name']);
