@@ -17,6 +17,11 @@ if ($conn->connect_error) {
 $sql = "SELECT name, email, phone_number, sweets, other_sweet, quantity FROM Orders";
 $result = $conn->query($sql);
 
+// Check for query errors
+if (!$result) {
+    die("Error executing query: " . $conn->error);
+}
+
 if ($result->num_rows > 0) {
     echo "<table border='1' cellpadding='10' cellspacing='0'>";
     echo "<tr>
@@ -29,13 +34,21 @@ if ($result->num_rows > 0) {
           </tr>";
 
     while ($row = $result->fetch_assoc()) {
+        // Escape output to prevent XSS
+        $name = htmlspecialchars($row['name']);
+        $email = htmlspecialchars($row['email']);
+        $phone_number = htmlspecialchars($row['phone_number']);
+        $sweets = htmlspecialchars($row['sweets']);
+        $other_sweet = htmlspecialchars($row['other_sweet']);
+        $quantity = htmlspecialchars($row['quantity']);
+
         echo "<tr>
-                <td>" . $row['name'] . "</td>
-                <td>" . $row['email'] . "</td>
-                <td>" . $row['phone_number'] . "</td>
-                <td>" . $row['sweets'] . "</td>
-                <td>" . ($row['other_sweet'] ? $row['other_sweet'] : 'N/A') . "</td>
-                <td>" . $row['quantity'] . "</td>
+                <td>$name</td>
+                <td>$email</td>
+                <td>$phone_number</td>
+                <td>$sweets</td>
+                <td>" . ($other_sweet ? $other_sweet : 'N/A') . "</td>
+                <td>$quantity</td>
               </tr>";
     }
 
